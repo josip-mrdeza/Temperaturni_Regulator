@@ -1,2 +1,13 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+build/** linguist-vendored
+.qtcreator/** linguist-vendored
+*.txt linguist-vendored
+*Makefile* linguist-vendored
+CMakeLists.txt linguist-vendored
+makefile linguist-vendored
+*.mk linguist-vendored
+*.cmake linguist-vendored
+*.cpp linguist-detectable=true
+*.hpp linguist-detectable=true
+*.c linguist-detectable=true
+*.h linguist-detectable=true
+*.qml linguist-detectable=true
