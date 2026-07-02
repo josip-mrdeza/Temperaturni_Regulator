@@ -1,0 +1,2 @@
+../Core/Src/GY273/gy273.c:8:12:GY273_Init	40	static
+../Core/Src/GY273/gy273.c:40:9:GY273_Read	56	static

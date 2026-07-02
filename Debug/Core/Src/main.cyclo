@@ -1,0 +1,5 @@
+../Core/Src/main.c:59:6:Servo_Init	1
+../Core/Src/main.c:64:6:Servo_SetAngle	2
+../Core/Src/main.c:86:5:main	2
+../Core/Src/main.c:149:6:SystemClock_Config	3
+../Core/Src/main.c:198:6:Error_Handler	1

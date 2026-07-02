@@ -1,0 +1,12 @@
+../Core/Src/LCD/ssd1315.c:15:13:SSD1315_WriteCommand	32	static
+../Core/Src/LCD/ssd1315.c:19:9:SSD1315_Init	16	static
+../Core/Src/LCD/ssd1315.c:55:6:SSD1315_Clear	8	static
+../Core/Src/LCD/ssd1315.c:60:6:SSD1315_UpdateScreen	40	static
+../Core/Src/LCD/ssd1315.c:72:6:SSD1315_DrawPixel	16	static
+../Core/Src/LCD/ssd1315.c:82:6:SSD1315_DrawBorder	32	static
+../Core/Src/LCD/ssd1315.c:197:6:SSD1315_DrawChar	24	static
+../Core/Src/LCD/ssd1315.c:222:6:SSD1315_DrawString	16	static
+../Core/Src/LCD/ssd1315.c:232:6:Menu_Init	16	static
+../Core/Src/LCD/ssd1315.c:241:6:Menu_Draw	40	static
+../Core/Src/LCD/ssd1315.c:293:6:Menu_HandleButtonClick	16	static
+../Core/Src/LCD/ssd1315.c:317:6:Menu_HandleButtonEncoder	16	static
