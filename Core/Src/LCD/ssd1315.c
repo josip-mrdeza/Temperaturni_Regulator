@@ -8,6 +8,7 @@
 
 #include "LCD/ssd1315.h"
 #include <string.h>
+#include "Sensors/dht22.h"
 
 // Screen local buffer (128 * 64 / 8 = 1024 bytes)
 static uint8_t SSD1315_Buffer[SSD1315_WIDTH * SSD1315_HEIGHT / 8];
@@ -227,11 +228,11 @@ void SSD1315_DrawString(uint8_t x, uint8_t y, const char* str) {
 #include <stdio.h>
 
 void Menu_Init(AppData_t *data) {
-	data->currentState = STATE_MAIN_MENU;
+	data->currentState = STATE_INIT;
 	data->selectedItem = 0;
-	data->currentTemperature = 24.5f;
+	data->currentTemperature = 0;
 	data->targetTemperature = 22.0f;
-	data->logCount = 142;
+	data->logCount = 0;
 }
 
 void Menu_Draw(I2C_HandleTypeDef *hi2c, AppData_t *data) {
@@ -273,7 +274,7 @@ void Menu_Draw(I2C_HandleTypeDef *hi2c, AppData_t *data) {
 			break;
 
 		case STATE_TEMP_ADJUST:
-			SSD1315_DrawString(10, 2, "[TEMP ADJUSTMENT]");
+			SSD1315_DrawString(10, 2, "[TEMPERATURE]");
 
 			sprintf(buff, "Current: %.1f C", data->currentTemperature);
 			SSD1315_DrawString(10, 20, buff);
@@ -284,7 +285,7 @@ void Menu_Draw(I2C_HandleTypeDef *hi2c, AppData_t *data) {
 			SSD1315_DrawString(10, 54, "> Back");
 			break;
 		case STATE_HUM_ADJUST:
-			SSD1315_DrawString(10, 2, "[TEMP ADJUSTMENT]");
+			SSD1315_DrawString(10, 2, "[HUMIDITY]");
 
 			sprintf(buff, "Current: %.1f C", data->currentTemperature);
 			SSD1315_DrawString(10, 20, buff);
@@ -293,6 +294,42 @@ void Menu_Draw(I2C_HandleTypeDef *hi2c, AppData_t *data) {
 			SSD1315_DrawString(10, 36, buff);
 
 			SSD1315_DrawString(10, 54, "> Back");
+			break;
+		case STATE_INIT:
+			SSD1315_DrawString(10, 2, "[INIT]");
+
+			SSD1315_DrawString(10, 54, "> Back");
+			break;
+		case STATE_USB_RX:
+			SSD1315_DrawString(10, 2, "[USB-RX-DATA]");
+			uint32_t bytesLeft = *data->ptrToUsbBuffLen;
+			uint32_t bufferIdx = 0;
+			uint32_t currentY = 20;
+			uint32_t chars_per_line = (118 / 6);
+			while (bytesLeft > 0 && currentY < 52)
+			{
+			    uint32_t chunkLen = (bytesLeft > 6) ? chars_per_line : bytesLeft;
+
+			    if (chunkLen >= sizeof(buff)) {
+			        chunkLen = sizeof(buff) - 1;
+			    }
+
+			    memcpy(buff, (data->ptrToUsbBuff + bufferIdx), chunkLen);
+			    buff[chunkLen] = '\0';
+
+			    SSD1315_DrawString(10, currentY, buff);
+
+			    bufferIdx += chunkLen;
+			    bytesLeft -= chunkLen;
+			    currentY  += 16;
+			}
+
+			SSD1315_DrawString(10, 54, "> Back");
+
+			// Clear buffers
+			memset(buff, 0, sizeof(buff));
+			memset(data->ptrToUsbBuff, 0, 128);
+			*data->ptrToUsbBuffLen = 0;
 			break;
 	}
 
@@ -321,11 +358,16 @@ void Menu_HandleButtonClick(AppData_t *data) {
 
 void Menu_HandleButtonEncoder(AppData_t *data) {
 	if (data->currentState == STATE_MAIN_MENU) {
-		// Toggle index position between 0 and 1
+
 		data->selectedItem = (data->selectedItem == 0) ? 1 : 0;
 	} else if (data->currentState == STATE_TEMP_ADJUST) {
-		// Increment target temperature when inside the interface
+
 		data->targetTemperature += 0.5f;
 		if (data->targetTemperature > 40.0f) data->targetTemperature = 15.0f;
 	}
+}
+
+void Menu_SwitchUSBRx(AppData_t *data)
+{
+
 }

@@ -25,7 +25,9 @@ typedef enum {
     STATE_MAIN_MENU = 0,
     STATE_LOGGING,
     STATE_TEMP_ADJUST,
-	STATE_HUM_ADJUST
+	STATE_HUM_ADJUST,
+	STATE_INIT,
+	STATE_USB_RX
 } MenuState_t;
 
 typedef struct {
@@ -36,6 +38,8 @@ typedef struct {
     float currentHumidity;
     float targetHumidity;
     uint32_t logCount;
+    volatile uint8_t* ptrToUsbBuff;
+    volatile uint16_t* ptrToUsbBuffLen;
 } AppData_t;
 
 void SSD1315_DrawChar(uint8_t x, uint8_t y, char c);

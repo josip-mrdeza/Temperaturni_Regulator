@@ -1,0 +1,4 @@
+../Core/Src/Sensors/dht22.c:3:13:Delay_us	16	static
+../Core/Src/Sensors/dht22.c:8:13:Wait_For_Pin_State	16	static
+../Core/Src/Sensors/dht22.c:18:6:DHT22_Init	48	static
+../Core/Src/Sensors/dht22.c:40:6:DHT22_Read	40	static

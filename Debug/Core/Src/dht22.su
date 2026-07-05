@@ -1,4 +1,0 @@
-../Core/Src/dht22.c:3:13:DHT_PinOut	40	static
-../Core/Src/dht22.c:13:13:DHT_PinIn	40	static
-../Core/Src/dht22.c:22:13:delay_us	24	static
-../Core/Src/dht22.c:29:9:DHT22_Read	48	static

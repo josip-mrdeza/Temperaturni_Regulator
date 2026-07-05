@@ -31,7 +31,6 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "dht22.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -65,11 +64,12 @@ void Error_Handler(void);
 #define Btn_Back_GPIO_Port GPIOA
 #define Btn_FW_Pin GPIO_PIN_3
 #define Btn_FW_GPIO_Port GPIOA
+#define DHT22_DATA_Pin GPIO_PIN_0
+#define DHT22_DATA_GPIO_Port GPIOB
 #define TIMER2_PERIODIC_Pin GPIO_PIN_15
 #define TIMER2_PERIODIC_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
-extern DHT22_HandleTypeDef dht;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

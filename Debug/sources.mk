@@ -22,10 +22,13 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-Core/Src/GY273 \
 Core/Src/LCD \
+Core/Src/Sensors \
 Core/Src \
-Core/Src/mpu6050 \
 Core/Startup \
 Drivers/STM32F4xx_HAL_Driver/Src \
+Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src \
+Middlewares/ST/STM32_USB_Device_Library/Core/Src \
+USB_DEVICE/App \
+USB_DEVICE/Target \
 
