@@ -287,10 +287,10 @@ void Menu_Draw(I2C_HandleTypeDef *hi2c, AppData_t *data) {
 		case STATE_HUM_ADJUST:
 			SSD1315_DrawString(10, 2, "[HUMIDITY]");
 
-			sprintf(buff, "Current: %.1f C", data->currentTemperature);
+			sprintf(buff, "Current: %.1f %", data->currentHumidity);
 			SSD1315_DrawString(10, 20, buff);
 
-			sprintf(buff, "Target : %.1f C", data->targetTemperature);
+			sprintf(buff, "Target : %.1f %", data->targetHumidity);
 			SSD1315_DrawString(10, 36, buff);
 
 			SSD1315_DrawString(10, 54, "> Back");

@@ -37,9 +37,12 @@ typedef struct {
     float targetTemperature;
     float currentHumidity;
     float targetHumidity;
+    float system_voltage;
+    float system_current;
+    float silicon_temp;
     uint32_t logCount;
-    volatile uint8_t* ptrToUsbBuff;
-    volatile uint16_t* ptrToUsbBuffLen;
+    uint8_t* ptrToUsbBuff;
+    uint16_t* ptrToUsbBuffLen;
 } AppData_t;
 
 void SSD1315_DrawChar(uint8_t x, uint8_t y, char c);
