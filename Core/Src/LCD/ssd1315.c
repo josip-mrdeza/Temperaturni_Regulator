@@ -240,39 +240,6 @@ void Menu_Draw(I2C_HandleTypeDef *hi2c, AppData_t *data) {
 	SSD1315_Clear();
 
 	switch(data->currentState) {
-	case STATE_MAIN_MENU:
-		SSD1315_DrawString(10, 2, "--- MAIN MENU ---");
-
-		SSD1315_DrawString(20, 24, "1. Logging Data");
-		SSD1315_DrawString(20, 40, "2. Temp Adjust");
-		SSD1315_DrawString(20, 56, "3. Temp Adjust");
-
-		switch(data->selectedItem)
-		{
-		case 0:
-			SSD1315_DrawString(8, 24, ">");
-			break;
-		case 1:
-			SSD1315_DrawString(8, 40, ">");
-			break;
-		case 2:
-			SSD1315_DrawString(8, 56, ">");
-			break;
-		}
-		break;
-
-		case STATE_LOGGING:
-			SSD1315_DrawString(5, 2, "LOGGING INTERFACE");
-
-			static char log_line[24];
-
-			snprintf(log_line, sizeof(log_line), "Total Logs: %d", (int)data->logCount);
-			SSD1315_DrawString(10, 22, log_line);
-
-			SSD1315_DrawString(10, 40, "Status: RUNNING");
-			SSD1315_DrawString(10, 54, "> Back");
-			break;
-
 		case STATE_TEMP_ADJUST:
 			SSD1315_DrawString(10, 2, "[TEMPERATURE]");
 
@@ -282,23 +249,23 @@ void Menu_Draw(I2C_HandleTypeDef *hi2c, AppData_t *data) {
 			sprintf(buff, "Target : %.1f C", data->targetTemperature);
 			SSD1315_DrawString(10, 36, buff);
 
-			SSD1315_DrawString(10, 54, "> Back");
+			sprintf(buff, "Delta : %.1f C", fabs(data->targetTemperature - data->currentTemperature));
+			SSD1315_DrawString(10, 54, buff);
 			break;
 		case STATE_HUM_ADJUST:
 			SSD1315_DrawString(10, 2, "[HUMIDITY]");
 
-			sprintf(buff, "Current: %.1f %", data->currentHumidity);
+			sprintf(buff, "Current: %.1f %%", data->currentHumidity);
 			SSD1315_DrawString(10, 20, buff);
 
-			sprintf(buff, "Target : %.1f %", data->targetHumidity);
+			sprintf(buff, "Target : %.1f %%", data->targetHumidity);
 			SSD1315_DrawString(10, 36, buff);
 
-			SSD1315_DrawString(10, 54, "> Back");
+			sprintf(buff, "Delta : %.1f %%", fabs(data->targetHumidity - data->currentHumidity));
+			SSD1315_DrawString(10, 54, buff);
 			break;
 		case STATE_INIT:
 			SSD1315_DrawString(10, 2, "[INIT]");
-
-			SSD1315_DrawString(10, 54, "> Back");
 			break;
 		case STATE_USB_RX:
 			SSD1315_DrawString(10, 2, "[USB-RX-DATA]");
@@ -323,51 +290,27 @@ void Menu_Draw(I2C_HandleTypeDef *hi2c, AppData_t *data) {
 			    bytesLeft -= chunkLen;
 			    currentY  += 16;
 			}
-
-			SSD1315_DrawString(10, 54, "> Back");
-
 			// Clear buffers
 			memset(buff, 0, sizeof(buff));
 			memset(data->ptrToUsbBuff, 0, 128);
 			*data->ptrToUsbBuffLen = 0;
 			break;
+		case STATE_POWER:
+			sprintf(buff, "[POWER] - T%.1f C", data->silicon_temp);
+			SSD1315_DrawString(10, 2, buff);
+
+			sprintf(buff, "Voltage: %.2f V", data->system_voltage);
+			SSD1315_DrawString(10, 20, buff);
+
+			sprintf(buff, "Current: %.3f A", data->system_current);
+			SSD1315_DrawString(10, 36, buff);
+
+			sprintf(buff, "Power: %.3f W", data->system_voltage*data->system_current);
+			SSD1315_DrawString(10, 54, buff);
+
+			break;
+
 	}
 
 	SSD1315_UpdateScreen(hi2c);
-}
-
-void Menu_HandleButtonClick(AppData_t *data) {
-	switch(data->currentState) {
-	case STATE_MAIN_MENU:
-		if (data->selectedItem == 0) {
-			data->currentState = STATE_LOGGING;
-		} else {
-			data->currentState = STATE_TEMP_ADJUST;
-		}
-		break;
-
-	case STATE_LOGGING:
-		data->currentState = STATE_MAIN_MENU;
-		break;
-
-	case STATE_TEMP_ADJUST:
-		data->currentState = STATE_MAIN_MENU;
-		break;
-	}
-}
-
-void Menu_HandleButtonEncoder(AppData_t *data) {
-	if (data->currentState == STATE_MAIN_MENU) {
-
-		data->selectedItem = (data->selectedItem == 0) ? 1 : 0;
-	} else if (data->currentState == STATE_TEMP_ADJUST) {
-
-		data->targetTemperature += 0.5f;
-		if (data->targetTemperature > 40.0f) data->targetTemperature = 15.0f;
-	}
-}
-
-void Menu_SwitchUSBRx(AppData_t *data)
-{
-
 }

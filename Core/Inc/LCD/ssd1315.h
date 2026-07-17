@@ -23,11 +23,11 @@ void SSD1315_DrawPixel(uint8_t x, uint8_t y, uint8_t color);
 
 typedef enum {
     STATE_MAIN_MENU = 0,
-    STATE_LOGGING,
     STATE_TEMP_ADJUST,
 	STATE_HUM_ADJUST,
 	STATE_INIT,
-	STATE_USB_RX
+	STATE_USB_RX,
+	STATE_POWER
 } MenuState_t;
 
 typedef struct {

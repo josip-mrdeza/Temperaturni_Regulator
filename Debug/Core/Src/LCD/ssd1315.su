@@ -8,6 +8,3 @@
 ../Core/Src/LCD/ssd1315.c:221:6:SSD1315_DrawString	16	static
 ../Core/Src/LCD/ssd1315.c:230:6:Menu_Init	16	static
 ../Core/Src/LCD/ssd1315.c:238:6:Menu_Draw	64	static
-../Core/Src/LCD/ssd1315.c:339:6:Menu_HandleButtonClick	16	static
-../Core/Src/LCD/ssd1315.c:359:6:Menu_HandleButtonEncoder	16	static
-../Core/Src/LCD/ssd1315.c:370:6:Menu_SwitchUSBRx	16	static
