@@ -69,17 +69,26 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void Usb_Rx_Draw(volatile uint8_t usb_rx_buff_flag,
-		volatile uint16_t usb_rx_buff_len, AppData_t *guiData) {
+void Usb_Rx_Draw(AppData_t *guiData) {
 	if (usb_rx_buff_flag && usb_rx_buff_len > 0) {
 		usb_rx_buff_flag = 0;
-		guiData->currentState = STATE_USB_RX;
+		usb_rx_buff[usb_rx_buff_len] = '\0';
+		if (strncmp(usb_rx_buff, "T:", 2) == 0)
+		{
+			guiData->targetTemperature = strtof(&usb_rx_buff[2], NULL);
+		}
+		else if (strncmp(usb_rx_buff, "H:", 2) == 0)
+		{
+			guiData->targetHumidity = strtof(&usb_rx_buff[2], NULL);
+		}
+		else
+		{
+			guiData->currentState = STATE_USB_RX;
+		}
 		Menu_Draw(&hi2c2, &*guiData);
-		HAL_Delay(1000);
 	}
 }
-void Dht_Read_Draw(volatile _Bool trigger_dht_read,
-		DHT22_t *dht_instance, AppData_t *guiData) {
+void Dht_Read_Draw(DHT22_t *dht_instance, AppData_t *guiData) {
 	/* USER CODE END WHILE */
 	/* USER CODE BEGIN 3 */
 	if (trigger_dht_read && DHT22_Read(dht_instance)) {
@@ -90,8 +99,12 @@ void Dht_Read_Draw(volatile _Bool trigger_dht_read,
 		Menu_Draw(&hi2c2, guiData);
 		uint8_t usb_buf_temp[128];
 		int len = sprintf((char*restrict) usb_buf_temp,
-				"Temp: %.1f C | Hum: %.1f %%\r\n",
-				dht_instance->temperature, dht_instance->humidity);
+				"T:%.1f\n",
+				dht_instance->temperature);
+		CDC_Transmit_FS((uint8_t*) usb_buf_temp, len);
+		len = sprintf((char*restrict) usb_buf_temp,
+				"H:%.1f\n",
+				dht_instance->humidity);
 		CDC_Transmit_FS((uint8_t*) usb_buf_temp, len);
 	}
 }
@@ -100,13 +113,17 @@ void ADC_Read_Draw(volatile _Bool trigger_adc_read) {
 	if (trigger_adc_read) {
 		//12 bit adc
 		trigger_adc_read = 0;
-		HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY); //IN0
+		uint8_t status = 0;
+		status = HAL_ADC_PollForConversion(&hadc1, 100); //IN0
 		uint32_t in0_val = HAL_ADC_GetValue(&hadc1);
-		HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY); //IN
+		status = HAL_ADC_PollForConversion(&hadc1, 100); //IN
 		uint32_t in1_val = HAL_ADC_GetValue(&hadc1);
-		HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY); //silicon_temp
+		status = HAL_ADC_PollForConversion(&hadc1, 100); //silicon_temp
 		uint32_t si_board_temp_val = HAL_ADC_GetValue(&hadc1);
-
+		if(status != HAL_OK)
+		{
+			return;
+		}
 		uint32_t adc_max = (1<<12) - 1;
 		float in0_voltage = (in0_val / adc_max) * 3.3f;
 		float shunt_in1_voltage = (in1_val / adc_max) * 3.3f;
@@ -178,8 +195,8 @@ int main(void)
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
-		Dht_Read_Draw(trigger_dht_read, &dht_instance, &guiData);
-		Usb_Rx_Draw(usb_rx_buff_flag, usb_rx_buff_len, &guiData);
+		Dht_Read_Draw(&dht_instance, &guiData);
+		Usb_Rx_Draw(&guiData);
 		ADC_Read_Draw(trigger_adc_read);
 	}
 	/* USER CODE END 3 */
