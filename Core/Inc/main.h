@@ -68,6 +68,12 @@ void init_all();
 #define DHT22_DATA_GPIO_Port GPIOB
 #define TIMER2_PERIODIC_Pin GPIO_PIN_15
 #define TIMER2_PERIODIC_GPIO_Port GPIOA
+#define LED_RED_Pin GPIO_PIN_4
+#define LED_RED_GPIO_Port GPIOB
+#define LED_YELLOW_Pin GPIO_PIN_5
+#define LED_YELLOW_GPIO_Port GPIOB
+#define LED_GREEN_Pin GPIO_PIN_6
+#define LED_GREEN_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 /* USER CODE END Private defines */

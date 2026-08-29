@@ -54,11 +54,11 @@
 AppData_t guiData;
 uint32_t last_tick;
 DHT22_t dht_instance; //class ref
-volatile bool trigger_adc_read;
-volatile bool trigger_dht_read;
+volatile _Bool trigger_adc_read;
+volatile _Bool trigger_dht_read;
+volatile _Bool usb_rx_buff_flag = 0;
 volatile uint8_t usb_rx_buff[128];
 volatile uint16_t usb_rx_buff_len;
-volatile uint8_t usb_rx_buff_flag = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -106,22 +106,27 @@ void Usb_Rx_Draw(AppData_t *guiData) {
 		Menu_Draw(&hi2c2, &*guiData);
 	}
 }
-void Dht_Read_Draw(DHT22_t *dht_instance, AppData_t *guiData) {
+void Dht_Read_Draw(DHT22_t *dht_instance) {
 	if (trigger_dht_read && DHT22_Read(dht_instance)) {
 		trigger_dht_read = 0;
-		guiData->currentTemperature = dht_instance->temperature;
-		guiData->currentHumidity = dht_instance->humidity;
+		guiData.currentTemperature = dht_instance->temperature;
+		guiData.currentHumidity = dht_instance->humidity;
+		Menu_Draw(&hi2c2, &guiData);
 		uint8_t usb_buf_temp[128];
 		int len = sprintf((char*restrict) usb_buf_temp,
-				"T:%.1f\n",
-				dht_instance->temperature);
+				"T:%.2f\n",
+				guiData.currentTemperature);
 		CDC_Transmit_FS((uint8_t*) usb_buf_temp, len);
 		len = sprintf((char*restrict) usb_buf_temp,
-				"H:%.1f\n",
-				dht_instance->humidity);
+				"H:%.2f\n",
+				guiData.currentHumidity);
 		CDC_Transmit_FS((uint8_t*) usb_buf_temp, len);
-		Menu_Draw(&hi2c2, &*guiData);
+
 	}
+
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, guiData.targetTemperature > guiData.currentTemperature);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, abs(guiData.targetTemperature - guiData.currentTemperature) < 1);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, guiData.targetTemperature < guiData.currentTemperature);
 }
 
 void ADC_Read_Draw(volatile _Bool trigger_adc_read) {
@@ -206,7 +211,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		Dht_Read_Draw(&dht_instance, &guiData);
+		Dht_Read_Draw(&dht_instance);
 		Usb_Rx_Draw(&guiData);
 		ADC_Read_Draw(trigger_adc_read);
 	}

@@ -18,7 +18,7 @@ typedef struct {
     uint16_t gpio_pin;          // GPIO_PIN_0
     float temperature;
     float humidity;
-    bool init_ok;
+    _Bool init_ok;
 } DHT22_t;
 
 // Public Methods

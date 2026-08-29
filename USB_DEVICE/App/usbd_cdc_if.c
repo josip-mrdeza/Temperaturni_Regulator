@@ -271,14 +271,13 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 			usb_rx_buff[i] = Buf[i];
 		}
 		usb_rx_buff_flag = 1;
-		CDC_Transmit_FS("Request ok->validation:", 23);
-		CDC_Transmit_FS(usb_rx_buff, sizeof(usb_rx_buff));
-		CDC_Transmit_FS("End validation.", 15);
+		//CDC_Transmit_FS("Request ok->validation:", 23);
+		//CDC_Transmit_FS(usb_rx_buff, sizeof(usb_rx_buff));
+		//CDC_Transmit_FS("End validation.", 15);
 	}
 	else
 	{
 		CDC_Transmit_FS("Request not valid.", 18);
-
 	}
 	return (USBD_OK);
   /* USER CODE END 6 */
