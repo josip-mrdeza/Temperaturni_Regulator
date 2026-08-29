@@ -2,7 +2,7 @@
 
 Sustav za nadzor i regulaciju temperature i vlažnosti zraka baziran na mikrokontroleru STM32F411CEU6 (Black Pill). Uređaj periodički očitava digitalni senzor DHT22, prikazuje podatke i izbornike na lokalnom I2C OLED zaslonu, upravlja mikrosrvom za zaklopku zraka, signalizira odstupanja putem LED dioda te omogućuje dvosmjernu komunikaciju s računalom preko USB CDC protokola (Virtual COM Port).
 
-Projekt je izrađen u sklopu kolegija Upravljanje u realnom vremenu / Ugradbeni računalni sustavi (URS) na Tehničkom veleučilištu u Zagrebu (TVZ).
+Projekt je izrađen u sklopu kolegija Ugradbeni računalni sustavi (URS) na Tehničkom veleučilištu u Zagrebu (TVZ) - Prijediplomski strucni studij Mehatronike.
 
 Autori: Josip Mrdeža i Noa Ivićek
 
@@ -12,7 +12,7 @@ Autori: Josip Mrdeža i Noa Ivićek
 
 Za praćenje telemetrije i konfiguraciju s računala razvijena je prateća aplikacija u Qt 6 (C++).
 
-Izvorni kod i upute za desktop aplikaciju nalaze se u repozitoriju:  
+Izvorni kod, upute za desktop aplikaciju te compiled binary nalaze se u repozitoriju:  
 https://github.com/josip-mrdeza/Temperaturni_Regulator_Qt
 
 ### Protokol komunikacije s aplikacijom
@@ -28,7 +28,7 @@ Komunikacija s računalom odvija se preko USB kabela (USB CDC Virtual COM Port) 
   - `MenuPower` - otvaranje prikaza napona, struje, snage i interne temperature čipa
   - `MenuUsb` - prikaz zadnjih primljenih sirovih bajtova s USB-a (debug pregled)
 
-Prijem podataka na mikrokontroleru izveden je asinkrono u `CDC_Receive_FS()` rutini pomoću međuspremnika i zastavice (`usb_rx_buff_flag`), čime se izbjegava blokiranje glavne petlje i prekidnih rutina.
+Prijem podataka na mikrokontroleru izveden je asinkrono u `CDC_Receive_FS()` rutini pomoću međuspremnika (buffer) i flag-a (`usb_rx_buff_flag`), čime se izbjegava blokiranje glavne petlje i prekidnih rutina.
 
 ---
 
